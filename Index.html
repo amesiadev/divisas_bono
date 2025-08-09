@@ -48,8 +48,9 @@ const bonosData = [
 ];
 
 async function fetchRates() {
+    const = API_KEY ='9de9ae686878740876245bb85d219a59';
     try {
-        const res = await fetch("https://api.exchangerate.host/latest?base=USD&symbols=VES,COP");
+        const res = await fetch("https://api.exchangeratesapi.io/v1/latest?access_key=API_KEY&base=USD&symbols=VES,COP");
         const data = await res.json();
         return data.rates; // { VES: valor, COP: valor }
     } catch (error) {
