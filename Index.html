@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Tabla de Bonos por Cambio de Divisas</title>
+<style>
+    body { font-family: Arial, sans-serif; background: #f7f7f7; padding: 20px; }
+    h1 { color: #333; }
+    table { border-collapse: collapse; width: 100%; background: white; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    th { background-color: #444; color: white; }
+    button { margin-top: 15px; padding: 10px 15px; font-size: 16px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { background: #218838; }
+</style>
+</head>
+<body>
+
+<h1>Bonos por Cambio de Divisas</h1>
+<p>Valores actualizados en tiempo real desde API.</p>
+
+<div id="tabla-container">
+    <table id="bonosTable">
+        <thead>
+            <tr>
+                <th>USD</th>
+                <th>Bono (VES)</th>
+                <th>Equiv. en COP</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<button id="shareBtn">📤 Compartir Tabla</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+const bonosData = [
+    { usd: 25, bonoVES: 500 },
+    { usd: 50, bonoVES: 1000 },
+    { usd: 100, bonoVES: 1500 },
+    { usd: 150, bonoVES: 2000 },
+    { usd: 200, bonoVES: 2500 },
+    { usd: 250, bonoVES: 3000 },
+    { usd: 300, bonoVES: 3500 },
+    { usd: 450, bonoVES: 4000 },
+    { usd: 500, bonoVES: 5000 }
+];
+
+async function fetchRates() {
+    try {
+        const res = await fetch("https://api.exchangerate.host/latest?base=USD&symbols=VES,COP");
+        const data = await res.json();
+        return data.rates; // { VES: valor, COP: valor }
+    } catch (error) {
+        console.error("Error obteniendo tasas:", error);
+        return null;
+    }
+}
+
+async function renderTable() {
+    const rates = await fetchRates();
+    if (!rates) return;
+
+    const tbody = document.querySelector("#bonosTable tbody");
+    tbody.innerHTML = "";
+
+    bonosData.forEach(item => {
+        const equivCOP = (item.usd * rates.COP).toLocaleString("es-CO", { style: "currency", currency: "COP" });
+        const row = `
+            <tr>
+                <td>${item.usd} USD</td>
+                <td>${item.bonoVES} Bs</td>
+                <td>${equivCOP}</td>
+            </tr>
+        `;
+        tbody.innerHTML += row;
+    });
+}
+
+async function shareScreenshot() {
+    const tableElement = document.getElementById("tabla-container");
+
+    html2canvas(tableElement).then(async canvas => {
+        canvas.toBlob(async blob => {
+            const file = new File([blob], "tabla_bonos.png", { type: "image/png" });
+
+            if (navigator.share && navigator.canShare({ files: [file] })) {
+                try {
+                    await navigator.share({
+                        title: "Bonos por Cambio de Divisas",
+                        text: "Aquí tienes la tabla actualizada de bonos y equivalencias.",
+                        files: [file]
+                    });
+                    console.log("Compartido exitosamente");
+                } catch (error) {
+                    console.error("Error al compartir:", error);
+                }
+            } else {
+                // Si el navegador no soporta compartir, descargar la imagen
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = "tabla_bonos.png";
+                link.click();
+                alert("Tu navegador no soporta compartir directo. La imagen se descargó.");
+            }
+        });
+    });
+}
+
+document.getElementById("shareBtn").addEventListener("click", shareScreenshot);
+
+renderTable();
+</script>
+
+</body>
+</html>
