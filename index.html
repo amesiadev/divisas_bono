@@ -23,8 +23,8 @@
         <thead>
             <tr>
                 <th>USD</th>
-                <th>Bono (VES)</th>
                 <th>Equiv. en COP</th>
+                <th>Bono (VES)</th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -44,7 +44,7 @@ const bonosData = [
     { usd: 250, bonoVES: 3000 },
     { usd: 300, bonoVES: 3500 },
     { usd: 450, bonoVES: 4000 },
-    { usd: 500, bonoVES: 5000 }
+    { usd: >=500, bonoVES: 5000 }
 ];
 
 async function fetchRates() {
@@ -71,8 +71,8 @@ async function renderTable() {
         const row = `
             <tr>
                 <td>${item.usd} USD</td>
-                <td>${item.bonoVES} Bs</td>
                 <td>${equivCOP}</td>
+                <td>${item.bonoVES} Bs</td>
             </tr>
         `;
         tbody.innerHTML += row;
