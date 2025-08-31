@@ -1,5 +1,6 @@
 const bonosData = [
-    { usd: 25, bonoVES: 500 },
+    { usd:10,bonoVes:200},
+    { usd: 25,bonoVES: 500 },
     { usd: 50, bonoVES: 1000 },
     { usd: 100, bonoVES: 1500 },
     { usd: 150, bonoVES: 2000 },
