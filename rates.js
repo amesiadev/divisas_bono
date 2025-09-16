@@ -7,8 +7,10 @@ const bonosData = [
     { usd: 200, bonoVES: 2500 },
     { usd: 250, bonoVES: 3000 },
     { usd: 300, bonoVES: 3500 },
-    { usd: 450, bonoVES: 4000 },
-    { usd: 500, bonoVES: 5000 }
+    { usd: 350, bonoVES: 4000 },
+    { usd: 400, bonoVES: 4500 },
+    { usd: 450, bonoVES: 5000 },
+    { usd: 500, bonoVES: 5500 }
 ];
 
 async function fetchRates() {
